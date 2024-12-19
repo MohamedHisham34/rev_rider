@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "970629865039",
+    "project_id": "rev-rider",
+    "storage_bucket": "rev-rider.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970629865039:android:16b59acf21c48a6bdad43a",
+        "android_client_info": {
+          "package_name": "com.example.rev_rider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnkp9mIeR_FCPgqa0gWlt0HNiJRLq21JA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
