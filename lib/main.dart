@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/firebase_options.dart';
+import 'package:rev_rider/screens/welcome_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,17 +16,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: FutureBuilder(
-      future: Firebase.initializeApp(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text("Database Connected");
-        }
-        if (snapshot.hasError) {
-          return Text("Error");
-        }
-        return Text("Loading");
+      home: FutureBuilder(
+        future: Firebase.initializeApp(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text("Database Connected");
+          }
+          if (snapshot.hasError) {
+            return Text("Error");
+          }
+          return Text("Loading");
+        },
+      ),
+      initialRoute: WelcomeScreen.id,
+      routes: {
+        WelcomeScreen.id: (context) => WelcomeScreen(),
       },
-    ));
+    );
   }
 }
