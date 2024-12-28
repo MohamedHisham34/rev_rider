@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:rev_rider/screens/Authentication/login_screen.dart';
+import 'package:rev_rider/screens/Authentication/registration_screen.dart';
 import 'package:rev_rider/screens/cart_screen.dart';
 import 'package:rev_rider/screens/home_screen.dart';
 import 'package:rev_rider/screens/profile_screen.dart';
@@ -17,8 +19,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   int currentIIndex = 0;
   List<Widget> screens = [
     HomeScreen(),
-    CartScreen(),
-    ProfileScreen(),
+    LoginScreen(),
+    RegistrationScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         currentIndex: currentIIndex,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Cart"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.category_rounded), label: "Cart"),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Profile"),
         ],
         onTap: (int NewIndex) {
