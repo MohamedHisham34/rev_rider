@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:rev_rider/screens/Authentication/login_screen.dart';
-import 'package:rev_rider/screens/Authentication/registration_screen.dart';
+import 'package:rev_rider/screens/admin_panel/admin_product_screen.dart';
+import 'package:rev_rider/screens/authentication/login_screen.dart';
+import 'package:rev_rider/screens/authentication/registration_screen.dart';
 import 'package:rev_rider/screens/cart_screen.dart';
 import 'package:rev_rider/screens/home_screen.dart';
 import 'package:rev_rider/screens/profile_screen.dart';
@@ -20,7 +21,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   List<Widget> screens = [
     HomeScreen(),
     LoginScreen(),
-    RegistrationScreen(),
+    AdminProductScreen(),
   ];
   @override
   Widget build(BuildContext context) {
