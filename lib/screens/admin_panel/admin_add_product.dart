@@ -1,18 +1,39 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/product_model.dart';
 
-class AdminProductScreen extends StatefulWidget {
-  AdminProductScreen({super.key});
+class AdminAddProduct extends StatefulWidget {
+  AdminAddProduct({super.key});
 
   @override
-  State<AdminProductScreen> createState() => _AdminProductScreenState();
+  State<AdminAddProduct> createState() => _AdminAddProductState();
 }
 
-class _AdminProductScreenState extends State<AdminProductScreen> {
-  String? productID;
+class _AdminAddProductState extends State<AdminAddProduct> {
+  String productId = Random().nextInt(999999999).toString();
+  void initState() {
+    checkRepeatedGenNumber();
+    super.initState();
+  }
+
+  void checkRepeatedGenNumber() async {
+    await db.collection("products").get().then(
+      (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          if (productId == docSnapshot.id) {
+            print("Generated Number Been Used");
+            productId = Random().nextInt(999999999).toString();
+            setState(() {});
+          }
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
 
   String? itemName;
 
@@ -32,12 +53,6 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
       ),
       body: Column(
         children: [
-          TextField(
-            decoration: InputDecoration(hintText: "Enter ID"),
-            onChanged: (value) {
-              productID = value;
-            },
-          ),
           TextField(
             decoration: InputDecoration(hintText: "Enter item Name"),
             onChanged: (value) {
@@ -74,14 +89,17 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
             textColor: Colors.white,
             onPressed: () async {
               ProductModel productModel = ProductModel(
-                  productID: productID,
+                  productID: productId,
                   itemName: itemName,
                   isAvaliable: isAvaliable,
                   price: price,
                   description: description,
                   imageUrl: null);
 
-              db.collection("products").add(productModel.productInfo());
+              db
+                  .collection("products")
+                  .doc("${productId}")
+                  .set(productModel.productInfo());
             },
             child: Text("ADD PRODUCT"),
           ),

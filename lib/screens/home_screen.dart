@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/screens/product_details.dart';
 
 class HomeScreen extends StatefulWidget {
   static final id = "HomeScreen";
@@ -16,57 +17,59 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var file;
-  final ImagePicker picker = ImagePicker();
-
-  getimage() async {
-    final XFile? imagex = await picker.pickImage(source: ImageSource.camera);
-    file = File(imagex!.path);
-    setState(() {});
-  }
-
   void initState() {
-    // getData();
+    getData();
     super.initState();
   }
 
   var data = [];
 
-  // getData() async {
-  //   QuerySnapshot querySnapshot = await db.collection("mohamed").get();
-  //   data.addAll(querySnapshot.docs);
-  //   setState(() {});
-  // }
+  getData() async {
+    try {
+      QuerySnapshot querySnapshot = await db.collection("products").get();
+      data.addAll(querySnapshot.docs);
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            getimage();
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      body: SafeArea(
+        child: GridView.builder(
+          itemCount: data.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, mainAxisSpacing: 20),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                String selectedItemId = data[index]['productID'];
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetails(
+                        selectedItemId: selectedItemId,
+                      ),
+                    ));
+              },
+              child: Card(
+                child: Column(
+                  children: [
+                    Text(data[index]['description'].toString()),
+                    Text(data[index]['itemName'].toString()),
+                    Text(data[index]['price'].toString()),
+                  ],
+                ),
+              ),
+            );
           },
-          child: Text(
-            "Click",
-            style: TextStyle(fontSize: 20),
-          ),
         ),
       ),
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text('Home Page'),
-    //   ),
-    //   body: SafeArea(
-    //     child: GridView.builder(
-    //       itemCount: data.length,
-    //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //           crossAxisCount: 2, mainAxisSpacing: 20),
-    //       itemBuilder: (context, index) {
-    //         return Text("${data[index]["name"]}");
-    //       },
-    //     ),
-    //   ),
-    // );
   }
 }
