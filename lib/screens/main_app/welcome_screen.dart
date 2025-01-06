@@ -5,9 +5,10 @@ import 'package:rev_rider/screens/admin_panel/admin_add_product.dart';
 import 'package:rev_rider/screens/admin_panel/admin_product_list.dart';
 import 'package:rev_rider/screens/authentication/login_screen.dart';
 import 'package:rev_rider/screens/authentication/registration_screen.dart';
-import 'package:rev_rider/screens/cart_screen.dart';
-import 'package:rev_rider/screens/home_screen.dart';
-import 'package:rev_rider/screens/profile_screen.dart';
+import 'package:rev_rider/screens/main_app/cart_screen.dart';
+import 'package:rev_rider/screens/main_app/home_screen.dart';
+import 'package:rev_rider/screens/main_app/profile_screen.dart';
+import 'package:rev_rider/test_functions.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const id = "WELCOME_SCREEN";
@@ -18,30 +19,30 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  int currentIIndex = 0;
+  int currentIndex = 0;
   List<Widget> screens = [
     HomeScreen(),
-    AdminProductList(),
     AdminAddProduct(),
+    CartScreen(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: screens[currentIIndex],
+        child: screens[currentIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIIndex,
+        currentIndex: currentIndex,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
               icon: Icon(Icons.category_rounded), label: "Cart"),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Profile"),
         ],
-        onTap: (int NewIndex) {
+        onTap: (int newIndex) {
           setState(() {
-            currentIIndex = NewIndex;
-            print(currentIIndex);
+            currentIndex = newIndex;
+            print(currentIndex);
           });
         },
       ),

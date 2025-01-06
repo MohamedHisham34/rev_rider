@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/services/cart_service.dart';
+import 'package:rev_rider/widgets/cart_listview.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -12,15 +14,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  Stream<QuerySnapshot> cartItemsStream = db
-      .collection('Users')
-      .doc("${authService.currentUser!.uid}")
-      .collection('cart')
-      .snapshots();
-  @override
-  void initState() {
-    super.initState();
-  }
+  CartService cartService = CartService();
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +23,9 @@ class _CartScreenState extends State<CartScreen> {
         title: const Text('Cart Page'),
       ),
       body: StreamBuilder(
-        stream: cartItemsStream,
+        stream: cartService.getCartItems(),
         builder: (context, snapshot) {
+          var docs = snapshot.data?.docs;
           if (snapshot.hasError) {
             return Text("Error Getting documents");
           }
@@ -40,18 +35,22 @@ class _CartScreenState extends State<CartScreen> {
               child: CircularProgressIndicator(),
             );
           }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              return Card(
-                child: Column(
-                  children: [
-                    Text(snapshot.data?.docs[index]['itemName']),
-                    Text("${snapshot.data?.docs[index]['price'].toString()}"),
-                  ],
+
+          return Column(
+            children: [
+              Expanded(
+                child: CartListview(
+                  docs: docs,
+                  itemCount: docs!.length,
+                  removeButtonFunction: (index) {
+                    var selectedProductId =
+                        snapshot.data?.docs[index]['productID'];
+                    cartService.removeProductFromCart(selectedProductId);
+                  },
                 ),
-              );
-            },
+              ),
+              Text("Total Price"),
+            ],
           );
         },
       ),

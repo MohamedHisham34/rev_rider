@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/firebase_options.dart';
-import 'package:rev_rider/screens/home_screen.dart';
-import 'package:rev_rider/screens/welcome_screen.dart';
+import 'package:rev_rider/screens/main_app/home_screen.dart';
+import 'package:rev_rider/screens/main_app/welcome_screen.dart';
 import 'package:rev_rider/services/auth_service.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;

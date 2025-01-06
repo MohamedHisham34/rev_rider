@@ -1,14 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:rev_rider/main.dart';
-import 'package:rev_rider/screens/product_details.dart';
-import 'package:rev_rider/services/category_services.dart';
-import 'package:rev_rider/services/product_services.dart';
+import 'package:rev_rider/screens/main_app/product_details.dart';
+import 'package:rev_rider/services/category_service.dart';
+import 'package:rev_rider/services/product_service.dart';
 import 'package:rev_rider/widgets/category_horizontal_listview.dart';
 import 'package:rev_rider/widgets/product_gridview.dart';
 
@@ -22,8 +18,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //Classes
-  ProductServices productServices = ProductServices();
-  CategoryServices categoryServices = CategoryServices();
+  ProductService productServices = ProductService();
+  CategoryService categoryServices = CategoryService();
   //Classes
 
 // CategoryList Map Which contains { categoryDocumentID: CategoryName }
@@ -69,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity,
               height: 60,
               child: Expanded(
+                //All Categories in Horizontal List
                 child: CategoryHorizontalListview(
                   itemCount: categoryList.length,
                   listedCategoryName: listedCategoryNames ?? [],
@@ -82,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             // this is the area that can CategoryHorizontalListview exists
+
             Expanded(
               child: FutureBuilder<QuerySnapshot>(
                 future: productServices.getProductsByCategory(
