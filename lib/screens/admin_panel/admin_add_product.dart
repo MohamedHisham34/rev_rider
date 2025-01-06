@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:math';
 
@@ -14,9 +14,23 @@ class AdminAddProduct extends StatefulWidget {
 }
 
 class _AdminAddProductState extends State<AdminAddProduct> {
+  getData() async {
+    await db.collection('categories').get().then(
+      (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          listedCategoryValue.add(docSnapshot.id);
+          listedCategoryLabel.add(docSnapshot.data()['name']);
+          setState(() {});
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
+
   String productId = Random().nextInt(999999999).toString();
   void initState() {
     checkRepeatedGenNumber();
+    getData();
     super.initState();
   }
 
@@ -35,15 +49,21 @@ class _AdminAddProductState extends State<AdminAddProduct> {
     );
   }
 
+  List<String> listedCategoryValue = [];
+  List listedCategoryLabel = [];
+  var selectedCategory;
+
   String? itemName;
 
-  late bool isAvaliable = false;
+  late bool isAvaliable = true;
 
   double? price;
 
   String? description;
 
   String? imageUrl;
+
+  int? stock;
 
   @override
   Widget build(BuildContext context) {
@@ -69,21 +89,53 @@ class _AdminAddProductState extends State<AdminAddProduct> {
             decoration: InputDecoration(hintText: "Enter Price"),
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              price = double.parse(value);
+              try {
+                price = double.parse(value);
+              } catch (e) {
+                print(e);
+              }
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "Enter Number Of Items"),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              try {
+                stock = int.parse(value);
+              } catch (e) {
+                print(e);
+              }
             },
           ),
           SizedBox(
             height: 10,
           ),
-          Text("The Item Is Avaliable"),
-          Checkbox(
-            value: isAvaliable,
-            onChanged: (value) {
-              setState(() {
-                isAvaliable = value!;
-              });
+          Text('Enter Product Category'),
+          DropdownMenu(
+            dropdownMenuEntries: List.generate(
+              listedCategoryValue.length,
+              (index) {
+                return DropdownMenuEntry(
+                  value: listedCategoryValue[index],
+                  label: listedCategoryLabel[index],
+                );
+              },
+            ),
+            onSelected: (value) {
+              selectedCategory = value;
+              print(selectedCategory);
             },
           ),
+
+          // Text("The Item Is Avaliable"),
+          // Checkbox(
+          //   value: isAvaliable,
+          //   onChanged: (value) {
+          //     setState(() {
+          //       isAvaliable = value!;
+          //     });
+          //   },
+          // ),
           MaterialButton(
             color: Colors.black,
             textColor: Colors.white,
@@ -91,9 +143,10 @@ class _AdminAddProductState extends State<AdminAddProduct> {
               ProductModel productModel = ProductModel(
                   productID: productId,
                   itemName: itemName,
-                  isAvaliable: isAvaliable,
                   price: price,
                   description: description,
+                  stock: stock,
+                  productCategory: selectedCategory,
                   imageUrl: null);
 
               db
