@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, prefer_const_literals_to_create_immutables, unnecessary_cast
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,13 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  List<dynamic> totalPriceData = [];
+
+  void initState() {
+    // cartService.calculateTotalPrice();
+    super.initState();
+  }
+
   CartService cartService = CartService();
 
   @override
@@ -29,6 +36,7 @@ class _CartScreenState extends State<CartScreen> {
           if (snapshot.hasError) {
             return Text("Error Getting documents");
           }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               alignment: Alignment.center,
@@ -49,7 +57,7 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
               ),
-              Text("Total Price"),
+              Text("${cartService.calculateTotalPrice(docs: docs).toString()}")
             ],
           );
         },

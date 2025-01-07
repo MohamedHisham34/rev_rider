@@ -12,43 +12,30 @@ class TestFunctions extends StatefulWidget {
 }
 
 class _TestFunctionsState extends State<TestFunctions> {
-  List<String> listedCatogoryValue = [];
-  List listedCatogoryLabel = [];
+  List<String> listedCategoryValue = [];
+  List<double> listedCategoryPrice = [];
   Map Listed = {};
-  var selectedCatogory;
+  var selectedCategory;
   var selectedKCategory = 'category1';
+  double? totalPrice;
   void initState() {
     getData();
-    getNewData();
     super.initState();
   }
 
-  getData() async {
-    await db.collection('categories').get().then(
+  Future<List> getData() async {
+    await db.collection('products').get().then(
       (querySnapshot) {
         for (var docSnapshot in querySnapshot.docs) {
-          listedCatogoryValue.add(docSnapshot.id);
-          listedCatogoryLabel.add(docSnapshot.data()['name']);
-          Listed.addAll({"${docSnapshot.id}": "${docSnapshot.data()['name']}"});
-          print(Listed.values);
+          listedCategoryValue.add(docSnapshot.id);
+          listedCategoryPrice.add(docSnapshot.data()['price']);
+          print(listedCategoryPrice[1]);
           setState(() {});
         }
       },
       onError: (e) => print("Error completing: $e"),
     );
-  }
-
-  getNewData() async {
-    await db.collection("products").get().then(
-      (querySnapshot) {
-        print("Successfully completed");
-        for (var docSnapshot in querySnapshot.docs) {
-          print(
-              '${docSnapshot.id} => ${docSnapshot.data()['productCategory']}');
-        }
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+    return listedCategoryPrice;
   }
 
   @override
@@ -68,8 +55,7 @@ class _TestFunctionsState extends State<TestFunctions> {
                 crossAxisCount: 2, crossAxisSpacing: 20),
             itemCount: snapshot.data?.docs.length,
             itemBuilder: (context, index) {
-              return Text(snapshot.data?.docs[index]['itemName'] ??
-                  'Not Contain Category');
+              return Text('t');
             },
           );
         },

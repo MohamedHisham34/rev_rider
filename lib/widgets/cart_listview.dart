@@ -12,6 +12,7 @@ class CartListview extends StatelessWidget {
   final int itemCount;
   final Function removeButtonFunction;
   final List<QueryDocumentSnapshot<Object?>>? docs;
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -26,10 +27,6 @@ class CartListview extends StatelessWidget {
                 color: Colors.red,
                 onPressed: () {
                   removeButtonFunction(index);
-                  // var selectedProductId =
-                  //     snapshot.data?.docs[index]['productID'];
-
-                  // cartService.removeProductFromCart(selectedProductId);
                 },
                 child: Text("Remove"),
               ),

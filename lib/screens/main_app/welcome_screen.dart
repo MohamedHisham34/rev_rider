@@ -22,7 +22,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   int currentIndex = 0;
   List<Widget> screens = [
     HomeScreen(),
-    AdminAddProduct(),
+    ProfileScreen(),
     CartScreen(),
   ];
   @override
