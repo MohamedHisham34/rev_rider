@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rev_rider/main.dart';
 
 class ProductService {
+  Stream<QuerySnapshot> productStream = db.collection('products').snapshots();
+
   // get Product by choosing category
   //selectedCategory is equal the selectedCategory in Home Page
 

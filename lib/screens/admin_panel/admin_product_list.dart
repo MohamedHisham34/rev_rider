@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/services/product_service.dart';
 
 class AdminProductList extends StatefulWidget {
   const AdminProductList({super.key});
@@ -12,11 +12,12 @@ class AdminProductList extends StatefulWidget {
 }
 
 class _AdminProductListState extends State<AdminProductList> {
-  Stream<QuerySnapshot> productStream = db.collection('products').snapshots();
+  ProductService productService = ProductService();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: productStream,
+      stream: productService.productStream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text("Error Getting documents");
@@ -31,6 +32,14 @@ class _AdminProductListState extends State<AdminProductList> {
         return ListView.builder(
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
+            String itemName =
+                snapshot.data?.docs[index]["itemName"] ?? "No Item Name Exists";
+
+            String description =
+                snapshot.data?.docs[index]["description"] ?? "No description";
+
+            double price = snapshot.data?.docs[index]["price"];
+
             return Card(
               color: Colors.white24,
               child: Padding(
@@ -39,9 +48,9 @@ class _AdminProductListState extends State<AdminProductList> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("${snapshot.data?.docs[index]["itemName"]}"),
-                    Text("${snapshot.data?.docs[index]["description"]}"),
-                    Text("${snapshot.data?.docs[index]["price"]}"),
+                    Text(itemName),
+                    Text(description),
+                    Text(price.toString()),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

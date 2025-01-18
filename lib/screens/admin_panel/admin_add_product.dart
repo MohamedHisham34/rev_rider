@@ -140,14 +140,14 @@ class _AdminAddProductState extends State<AdminAddProduct> {
             color: Colors.black,
             textColor: Colors.white,
             onPressed: () async {
-              ProductModel productModel = ProductModel(
+              ProductModel productModel = ProductModel.addProductToApp(
                   productID: productId,
                   itemName: itemName,
                   price: price,
                   description: description,
+                  imageUrl: null,
                   stock: stock,
-                  productCategory: selectedCategory,
-                  imageUrl: null);
+                  productCategory: selectedCategory);
 
               db
                   .collection("products")

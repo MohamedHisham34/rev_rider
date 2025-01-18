@@ -44,11 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void fetchCategories() async {
     Map<String, String> categories = await categoryServices.getCategory();
-    setState(() {
-      categoryList = categories;
-      listedCategoryIds = categories.keys.toList();
-      listedCategoryNames = categories.values.toList();
-    });
+    setState(
+      () {
+        categoryList = categories;
+        listedCategoryIds = categories.keys.toList();
+        listedCategoryNames = categories.values.toList();
+      },
+    );
   }
 
   @override
