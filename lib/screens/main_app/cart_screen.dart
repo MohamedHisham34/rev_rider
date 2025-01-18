@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/screens/main_app/order_details_screen.dart';
 import 'package:rev_rider/services/cart_service.dart';
 import 'package:rev_rider/widgets/cart_listview.dart';
 
@@ -14,10 +15,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  List<dynamic> totalPriceData = [];
-
   void initState() {
-    // cartService.calculateTotalPrice();
     super.initState();
   }
 
@@ -30,9 +28,10 @@ class _CartScreenState extends State<CartScreen> {
         title: const Text('Cart Page'),
       ),
       body: StreamBuilder(
-        stream: cartService.getCartItems(),
+        stream: cartService.cartItemsStream(),
         builder: (context, snapshot) {
           var docs = snapshot.data?.docs;
+
           if (snapshot.hasError) {
             return Text("Error Getting documents");
           }
@@ -57,7 +56,22 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
               ),
-              Text("${cartService.calculateTotalPrice(docs: docs).toString()}")
+              Text("${cartService.calculateTotalPrice(docs: docs).toString()}"),
+              MaterialButton(
+                color: Colors.green,
+                onPressed: () {
+                  print("Test");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrderDetailsScreen(
+                          totalCartPrice:
+                              cartService.calculateTotalPrice(docs: docs),
+                        ),
+                      ));
+                },
+                child: Text("data"),
+              )
             ],
           );
         },

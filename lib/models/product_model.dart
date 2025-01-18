@@ -1,14 +1,16 @@
+import 'package:meta/meta.dart';
+
 class ProductModel {
-  final String? productID;
-  final String? itemName;
+  String? productID;
+  String? itemName;
+  double? price;
+  String? description;
+  String? imageUrl;
+  int? stock;
+  String? productCategory;
+  int? quantity;
 
-  final double? price;
-  final String? description;
-  final String? imageUrl;
-  final int? stock;
-  final String? productCategory;
-
-  ProductModel({
+  ProductModel.addProductToApp({
     required this.productID,
     required this.itemName,
     required this.price,
@@ -16,6 +18,14 @@ class ProductModel {
     required this.imageUrl,
     required this.stock,
     required this.productCategory,
+  });
+
+  ProductModel.addProductTCart({
+    required this.itemName,
+    required this.productID,
+    required this.price,
+    required this.stock,
+    required this.quantity,
   });
 
   Map<String, dynamic> productInfo() {

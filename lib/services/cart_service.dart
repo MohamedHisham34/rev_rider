@@ -13,7 +13,7 @@ class CartService {
         .delete();
   }
 
-  Stream<QuerySnapshot> getCartItems() {
+  Stream<QuerySnapshot> cartItemsStream() {
     return db
         .collection('Users')
         .doc("${authService.currentUser!.uid}")
@@ -25,8 +25,8 @@ class CartService {
     double totalCartPrice = 0.00;
     for (var docs in docs) {
       double totalPrice = (docs.data() as Map<String, dynamic>)['price'] ?? 0.0;
-
-      totalCartPrice += totalPrice;
+      int quantity = (docs.data() as Map<String, dynamic>)['quantity'] ?? 1;
+      totalCartPrice += totalPrice * quantity;
     }
 
     return totalCartPrice;
