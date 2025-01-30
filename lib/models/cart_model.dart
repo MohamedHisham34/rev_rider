@@ -1,6 +1,7 @@
 import 'package:rev_rider/models/product_model.dart';
 
 class CartModel extends ProductModel {
+  
   CartModel.addProductTCart({
     required super.itemName,
     required super.productID,

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations
+// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, unnecessary_brace_in_string_interps
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/cart_model.dart';
 import 'package:rev_rider/services/product_service.dart';
+import 'package:rev_rider/widgets/quantity_selector.dart';
 
 class ProductDetails extends StatefulWidget {
   final String selectedItemId;
@@ -16,15 +17,21 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+// Started quantity
   int quantity = 1;
+
+// productService
   ProductService productService = ProductService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
+          //Future Builder For Product Details
           future: productService.getSingleProductById(
               selectedItemId: widget.selectedItemId),
+
+          //
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -38,39 +45,37 @@ class _ProductDetailsState extends State<ProductDetails> {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
+
+              //////////////////////////////////////
+              /////////////////////////////////////
+
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('Title'),
+                  title: const Text('Product Details'),
                 ),
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                        "Full Name: ${data['itemName']} description: ${data['description']} Price: ${data['price']}"),
-                    Row(
-                      children: [
-                        Text("${quantity}"),
-                        FloatingActionButton(
-                          heroTag: 't',
-                          onPressed: () {
-                            setState(() {
-                              quantity++;
-                            });
-                          },
-                          child: Icon(FontAwesomeIcons.plus),
-                        ),
-                        FloatingActionButton(
-                          heroTag: 't2',
-                          onPressed: () {
-                            setState(() {
-                              quantity--;
-                            });
-                          },
-                          child: Icon(FontAwesomeIcons.minus),
-                        )
-                      ],
+                    Text("items Name: ${data['itemName']} "
+                        " description: ${data['description']} "
+                        " Item Price: ${data['price']}"),
+
+                    // Quantity Selector Widget to Adjust Quantity
+                    QuantitySelector(
+                      quantity: quantity.toString(),
+                      onPlusTap: () {
+                        setState(() {
+                          quantity++;
+                        });
+                      },
+                      onMinusTap: () {
+                        setState(() {
+                          quantity--;
+                        });
+                      },
                     ),
+
                     MaterialButton(
                       onPressed: () async {
                         double price = double.parse("${data["price"]}");

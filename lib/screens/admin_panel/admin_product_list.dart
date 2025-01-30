@@ -12,6 +12,10 @@ class AdminProductList extends StatefulWidget {
 }
 
 class _AdminProductListState extends State<AdminProductList> {
+  String updatedItemName = '';
+  String updatedItemDescription = '';
+  double updatedItemPrice = 0;
+
   ProductService productService = ProductService();
 
   @override
@@ -56,7 +60,67 @@ class _AdminProductListState extends State<AdminProductList> {
                       children: [
                         MaterialButton(
                           color: Colors.black,
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text("Edit Product"),
+                                      content: Column(children: [
+                                        Text("Edit Item Name"),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        TextField(
+                                          onChanged: (value) {
+                                            updatedItemName = value;
+                                          },
+                                          decoration: InputDecoration(
+                                              hintText: "Enter Item Name"),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text("Edit Description"),
+                                        TextField(
+                                          onChanged: (value) {
+                                            updatedItemDescription = value;
+                                          },
+                                          decoration: InputDecoration(
+                                              hintText: "Enter Description"),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text("Edit Item Price"),
+                                        TextField(
+                                          onChanged: (value) {
+                                            updatedItemPrice =
+                                                double.parse(value);
+                                          },
+                                          decoration: InputDecoration(
+                                              hintText: "Enter Price"),
+                                        ),
+                                      ]),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            print(updatedItemName);
+                                            print(updatedItemDescription);
+                                            print(updatedItemPrice);
+
+                                            db
+                                                .collection('products')
+                                                .doc(snapshot.data?.docs[index]
+                                                    ['productID'])
+                                                .update({
+                                              "itemName": updatedItemName
+                                            });
+                                          },
+                                          child: Text("Update"),
+                                        )
+                                      ],
+                                    ));
+                          },
                           child: Text(
                             "Edit",
                             style: TextStyle(color: Colors.white),
