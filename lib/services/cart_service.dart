@@ -3,14 +3,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rev_rider/main.dart';
 
+CollectionReference cartReference = db
+    .collection('Users')
+    .doc("${authService.currentUser!.uid}")
+    .collection('cart');
+
 class CartService {
   removeProductFromCart(String selectedProductId) async {
-    await db
-        .collection('Users')
-        .doc(authService.currentUser?.uid)
-        .collection('cart')
-        .doc(selectedProductId)
-        .delete();
+    await cartReference.doc(selectedProductId).delete();
   }
 
   Stream<QuerySnapshot> cartItemsStream() {

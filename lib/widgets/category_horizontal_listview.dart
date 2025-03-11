@@ -2,40 +2,31 @@
 
 import 'package:flutter/material.dart';
 
-class CategoryHorizontalListview extends StatefulWidget {
-  const CategoryHorizontalListview({
+class CategoryHorizontalListview extends StatelessWidget {
+  CategoryHorizontalListview({
     super.key,
-    required this.itemCount,
     required this.onTap,
-    required this.listedCategoryName,
+    required this.snapshot,
   });
   /////////
-  final int itemCount;
   final Function onTap;
-  final List listedCategoryName;
+  AsyncSnapshot snapshot;
 
-  @override
-  State<CategoryHorizontalListview> createState() =>
-      _CategoryHorizontalListviewState();
-}
-
-class _CategoryHorizontalListviewState
-    extends State<CategoryHorizontalListview> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: widget.itemCount,
+      itemCount: snapshot.data?.docs.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: EdgeInsets.all(8),
           child: GestureDetector(
             onTap: () {
-              widget.onTap(index);
+              onTap(index);
             },
             child: Container(
               child: Text(
-                widget.listedCategoryName[index],
+                snapshot.data.docs[index]['name'],
                 style: TextStyle(color: Colors.blue),
               ),
               width: 100,

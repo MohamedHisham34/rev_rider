@@ -1,10 +1,21 @@
+// ignore_for_file: constant_identifier_names
+
 enum OrderState {
   delivering,
   shipping,
   canceled,
 }
 
+String orderID2 = "orderID";
+
 class OrderModel {
+  static const String firebaseField_orderID = 'orderID';
+  static const String firebaseField_orderTotalPrice = 'orderTotalPrice';
+  static const String firebaseField_numberOfItems = 'numberOfItems';
+  static const String firebaseField_orderAddress = 'orderAddress';
+  static const String firebaseField_orderPlacedBy = 'orderPlacedBy';
+  static const String firebaseField_orderState = 'orderState';
+
   final String? orderID;
   final double? orderTotalPrice;
   final int? numberOfItems;
@@ -22,12 +33,12 @@ class OrderModel {
 
   Map<String, dynamic> orderInfo() {
     return {
-      "orderID": orderID,
-      "orderTotalPrice": orderTotalPrice,
-      "numberOfItems": numberOfItems,
-      "orderAddress": orderAddress,
-      "orderState": orderState.name,
-      "orderPlacedBy": orderPlacedBy,
+      firebaseField_orderID: orderID,
+      firebaseField_orderTotalPrice: orderTotalPrice,
+      firebaseField_numberOfItems: numberOfItems,
+      firebaseField_orderAddress: orderAddress,
+      firebaseField_orderState: orderState.name,
+      firebaseField_orderPlacedBy: orderPlacedBy,
     };
   }
 }

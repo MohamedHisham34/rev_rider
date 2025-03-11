@@ -2,11 +2,16 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/cart_model.dart';
+import 'package:rev_rider/models/product_model.dart';
 import 'package:rev_rider/services/product_service.dart';
 import 'package:rev_rider/widgets/quantity_selector.dart';
+import 'package:rev_rider/widgets/reusable_future_builder.dart';
+
+// Started quantity
+int _quantity = 1;
 
 class ProductDetails extends StatefulWidget {
   final String selectedItemId;
@@ -17,95 +22,87 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-// Started quantity
-  int quantity = 1;
-
 // productService
   ProductService productService = ProductService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder(
-          //Future Builder For Product Details
+        child: ReusableFutureBuilder(
           future: productService.getSingleProductById(
               selectedItemId: widget.selectedItemId),
+          content: (snapshot) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Product Details'),
+              ),
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                      "items Name: ${snapshot.data[ProductModel.firebaseField_itemName]} "
+                      " description: ${snapshot.data[ProductModel.firebaseField_description]} "
+                      " Item Price: ${snapshot.data[ProductModel.firebaseField_price]}"),
 
-          //
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text("Something went wrong");
-            }
+                  // Quantity Selector Widget to Adjust Quantity
+                  ProductQuantitySelector(),
+                  MaterialButton(
+                    onPressed: () async {
+                      double price = double.parse(
+                          "${snapshot.data[ProductModel.firebaseField_price]}");
+                      int stock = int.parse(
+                          "${snapshot.data[ProductModel.firebaseField_stock]}");
 
-            if (snapshot.hasData && !snapshot.data!.exists) {
-              return Text("Document does not exist");
-            }
+                      CartModel cartModel = CartModel.addProductTCart(
+                          quantity: _quantity,
+                          itemName:
+                              "${snapshot.data[CartModel.firebaseField_itemName]}",
+                          productID: "${widget.selectedItemId}",
+                          price: price,
+                          stock: stock);
 
-            if (snapshot.connectionState == ConnectionState.done) {
-              Map<String, dynamic> data =
-                  snapshot.data!.data() as Map<String, dynamic>;
-
-              //////////////////////////////////////
-              /////////////////////////////////////
-
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text('Product Details'),
-                ),
-                body: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("items Name: ${data['itemName']} "
-                        " description: ${data['description']} "
-                        " Item Price: ${data['price']}"),
-
-                    // Quantity Selector Widget to Adjust Quantity
-                    QuantitySelector(
-                      quantity: quantity.toString(),
-                      onPlusTap: () {
-                        setState(() {
-                          quantity++;
-                        });
-                      },
-                      onMinusTap: () {
-                        setState(() {
-                          quantity--;
-                        });
-                      },
-                    ),
-
-                    MaterialButton(
-                      onPressed: () async {
-                        double price = double.parse("${data["price"]}");
-                        int stock = int.parse("${data['stock']}");
-
-                        CartModel cartModel = CartModel.addProductTCart(
-                            quantity: quantity,
-                            itemName: "${data['itemName']}",
-                            productID: "${widget.selectedItemId}",
-                            price: price,
-                            stock: stock);
-
-                        await db
-                            .collection("Users")
-                            .doc(authService.currentUser!.uid)
-                            .collection('cart')
-                            .doc("${widget.selectedItemId}")
-                            .set(cartModel.cartInfo());
-                      },
-                      child: Text("Add To Cart"),
-                    )
-                  ],
-                ),
-              );
-            }
-
-            return Text("loading");
+                      await db
+                          .collection("Users")
+                          .doc(authService.currentUser!.uid)
+                          .collection('cart')
+                          .doc("${widget.selectedItemId}")
+                          .set(cartModel.cartInfo());
+                    },
+                    child: Text("Add To Cart"),
+                  )
+                ],
+              ),
+            );
           },
+          //Future Builder For Product Details
         ),
       ),
+    );
+  }
+}
+
+class ProductQuantitySelector extends StatefulWidget {
+  const ProductQuantitySelector({super.key});
+
+  @override
+  State<ProductQuantitySelector> createState() =>
+      _ProductQuantitySelectorState();
+}
+
+class _ProductQuantitySelectorState extends State<ProductQuantitySelector> {
+  @override
+  Widget build(BuildContext context) {
+    return QuantitySelector(
+      quantity: _quantity,
+      onPlusTap: () {
+        _quantity++;
+        setState(() {});
+      },
+      onMinusTap: () {
+        _quantity--;
+        setState(() {});
+      },
     );
   }
 }

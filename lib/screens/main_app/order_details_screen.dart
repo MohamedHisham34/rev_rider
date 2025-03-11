@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/order_model.dart';
+import 'package:rev_rider/services/cart_service.dart';
 import 'package:uuid/uuid.dart';
 
 List<String> orderState = ['Delivering', 'Shipping'];
@@ -23,11 +24,7 @@ class OrderDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: SafeArea(
           child: FutureBuilder(
-            future: db
-                .collection('Users')
-                .doc("${authService.currentUser!.uid}")
-                .collection('cart')
-                .get(),
+            future: cartReference.get(),
             builder: (context, snapshot) {
               var docs = snapshot.data?.docs;
               if (snapshot.hasError) {

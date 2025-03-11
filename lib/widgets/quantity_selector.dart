@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class QuantitySelector extends StatelessWidget {
+class QuantitySelector extends StatefulWidget {
   const QuantitySelector(
       {super.key,
       required this.onPlusTap,
@@ -13,8 +13,13 @@ class QuantitySelector extends StatelessWidget {
 
   final Function onPlusTap;
   final Function onMinusTap;
-  final String quantity;
+  final int quantity;
 
+  @override
+  State<QuantitySelector> createState() => _QuantitySelectorState();
+}
+
+class _QuantitySelectorState extends State<QuantitySelector> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -22,7 +27,7 @@ class QuantitySelector extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
-          quantity,
+          "${widget.quantity}",
           style: TextStyle(fontSize: 30, backgroundColor: Colors.red),
         ),
         SizedBox(
@@ -31,14 +36,16 @@ class QuantitySelector extends StatelessWidget {
         FloatingActionButton(
           heroTag: 'plus',
           onPressed: () {
-            onPlusTap();
+            widget.onPlusTap();
+            setState(() {});
           },
           child: Icon(FontAwesomeIcons.plus),
         ),
         FloatingActionButton(
           heroTag: 'minus',
           onPressed: () {
-            onMinusTap();
+            widget.onMinusTap();
+            setState(() {});
           },
           child: Icon(FontAwesomeIcons.minus),
         )

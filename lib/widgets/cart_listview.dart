@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/models/cart_model.dart';
 import 'package:rev_rider/widgets/round_floating_button.dart';
 
 class CartListview extends StatefulWidget {
@@ -33,26 +34,32 @@ class _CartListviewState extends State<CartListview> {
     return ListView.builder(
       itemCount: widget.itemCount,
       itemBuilder: (context, index) {
-        int quantity = widget.docs![index]['quantity'];
+        int quantity = widget.docs![index][CartModel.firebaseField_quantity];
         return Card(
           child: Column(
             children: [
-              Text(widget.docs?[index]['itemName']),
-              Text("${widget.docs?[index]['price'].toString()}"),
-              Text("${widget.docs?[index]['quantity'].toString()}"),
+              Text(widget.docs?[index][CartModel.firebaseField_itemName]),
+              Text(
+                  "${widget.docs?[index][CartModel.firebaseField_price].toString()}"),
+              Text(
+                  "${widget.docs?[index][CartModel.firebaseField_quantity].toString()}"),
               RoundFloatingButton(
                   icon: FontAwesomeIcons.plus,
                   onPressed: () {
                     cartReference
-                        .doc(widget.docs![index]['productID'])
-                        .update({'quantity': quantity + 1});
+                        .doc(widget.docs![index]
+                            [CartModel.firebaseField_productID])
+                        .update(
+                            {CartModel.firebaseField_quantity: quantity + 1});
                   }),
               RoundFloatingButton(
                   icon: FontAwesomeIcons.minus,
                   onPressed: () {
                     cartReference
-                        .doc(widget.docs![index]['productID'])
-                        .update({'quantity': quantity - 1});
+                        .doc(widget.docs![index]
+                            [CartModel.firebaseField_productID])
+                        .update(
+                            {CartModel.firebaseField_quantity: quantity - 1});
                   }),
               MaterialButton(
                 color: Colors.red,

@@ -124,7 +124,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     try {
                       // await uAuth.createUserWithEmailAndPassword(
                       //     email: email, password: password);
-                      User? user = await authService.signIn(email, password);
+                      User? user = await authService.signUp(email, password);
                       if (user != null) {
                         print('Signed Up as: ${user.email}');
                       } else {
@@ -136,10 +136,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           phoneNumber: phoneNumber,
                           userID: uAuth.currentUser?.uid);
 
-                      db
-                          .collection("Users")
-                          .doc("${authService.currentUser?.uid}")
-                          .set(userInfo.userCredential());
+                      userReference.set(userInfo.userCredential());
                     } catch (e) {
                       print(e);
                     }

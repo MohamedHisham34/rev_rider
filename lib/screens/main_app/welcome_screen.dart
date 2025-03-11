@@ -3,12 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:rev_rider/screens/admin_panel/admin_add_product.dart';
 import 'package:rev_rider/screens/admin_panel/admin_product_list.dart';
-import 'package:rev_rider/screens/authentication/login_screen.dart';
-import 'package:rev_rider/screens/authentication/registration_screen.dart';
 import 'package:rev_rider/screens/main_app/cart_screen.dart';
 import 'package:rev_rider/screens/main_app/home_screen.dart';
-import 'package:rev_rider/screens/main_app/profile_screen.dart';
-import 'package:rev_rider/test_functions.dart';
+import 'package:rev_rider/screens/main_app/testing.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const id = "WELCOME_SCREEN";
@@ -22,8 +19,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   int currentIndex = 0;
   List<Widget> screens = [
     HomeScreen(),
-    CartScreen(),
     AdminProductList(),
+    CartScreen(),
   ];
   @override
   Widget build(BuildContext context) {
