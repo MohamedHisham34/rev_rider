@@ -5,22 +5,22 @@ class ReusableStreamBuilder extends StatelessWidget {
   const ReusableStreamBuilder(
       {super.key, required this.stream, required this.content});
 
-  final Stream stream;
-  final Widget Function(AsyncSnapshot snapshot) content;
+  final Stream<QuerySnapshot> stream;
+  final Widget Function(AsyncSnapshot<QuerySnapshot> snapshot) content;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text("Error Getting documents");
+          return const Text("Error Getting documents");
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
             alignment: Alignment.center,
-            child: CircularProgressIndicator(),
+            child: const CircularProgressIndicator(),
           );
         }
 

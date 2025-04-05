@@ -16,8 +16,16 @@ class CartService {
   Stream<QuerySnapshot> cartItemsStream() {
     return db
         .collection('Users')
-        .doc("${authService.currentUser!.uid}")
+        .doc("${authService.currentUser?.uid}")
         .collection('cart')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> cartItemsByProductsId(
+      {required Iterable<Object?>? productIds}) {
+    return db
+        .collection('products')
+        .where("productID", whereIn: productIds)
         .snapshots();
   }
 

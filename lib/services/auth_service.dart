@@ -1,6 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/screens/authentication/login_screen.dart';
 
 DocumentReference userReference =
     db.collection('User').doc("${authService.currentUser?.uid}");
@@ -55,6 +59,18 @@ class AuthService {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
       print('Error resetting password: $e');
+    }
+  }
+
+  signedInChecker({required BuildContext context}) async {
+    String? user = authService.currentUser?.uid;
+    if (user == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
     }
   }
 }
