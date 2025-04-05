@@ -33,10 +33,7 @@ class ProductModel {
   });
 
   ProductModel.addProductTCart({
-    required this.itemName,
     required this.productID,
-    required this.price,
-    required this.stock,
     required this.quantity,
   });
 
