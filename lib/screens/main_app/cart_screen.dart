@@ -1,70 +1,72 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, prefer_const_literals_to_create_immutables, unnecessary_cast
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rev_rider/models/cart_model.dart';
-import 'package:rev_rider/screens/main_app/order_details_screen.dart';
-import 'package:rev_rider/services/cart_service.dart';
+import 'package:rev_rider/main.dart';
+import 'package:rev_rider/models/product_model.dart';
 import 'package:rev_rider/widgets/cart_listview.dart';
-import 'package:rev_rider/widgets/reusable_stream_builder.dart';
+import 'package:rxdart/rxdart.dart';
 
-class CartScreen extends StatefulWidget {
+class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
-  @override
-  State<CartScreen> createState() => _CartScreenState();
-}
+  Stream<List<Map<String, dynamic>>> cartItemsStream() {
+    final cartRef = db
+        .collection("Users")
+        .doc(authService.currentUser?.uid)
+        .collection('cart');
 
-class _CartScreenState extends State<CartScreen> {
-  CartService cartService = CartService();
+    return cartRef.snapshots().switchMap((cartSnapshot) {
+      List<Stream<Map<String, dynamic>>> productStreams = [];
+
+      for (var cartDoc in cartSnapshot.docs) {
+        final productId = cartDoc.id;
+        final quantity = cartDoc['quantity'];
+
+        // For each product ID, listen to changes in product doc
+        final productStream = db
+            .collection('products')
+            .doc(productId)
+            .snapshots()
+            .map((productSnap) {
+          final productData = productSnap.data() ?? {};
+          productData['quantity'] = quantity;
+          return productData;
+        });
+
+        productStreams.add(productStream);
+      }
+
+      // If no items, return an empty stream
+      if (productStreams.isEmpty) {
+        return Stream.value([]);
+      }
+
+      // Combine all product streams into a single stream of list
+      return Rx.combineLatestList(productStreams);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Cart Page'),
-        ),
+      appBar: AppBar(
+        title: const Text('Cart'),
+      ),
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: cartItemsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        // Stream Builder for Cart items
-        body: ReusableStreamBuilder(
-          stream: cartService.cartItemsStream(),
-          content: (snapshot) {
-            var docs = snapshot.data?.docs;
-            return Column(
-              children: [
-                Expanded(
-                  //CART ITEMS INTERFACE
-                  child: CartListview(
-                    docs: docs,
-                    itemCount: docs!.length,
-                    removeButtonFunction: (index) {
-                      var selectedProductId = snapshot.data?.docs[index]
-                          [CartModel.firebaseField_productID];
-                      cartService.removeProductFromCart(selectedProductId);
-                    },
-                  ),
-                ),
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("Cart is empty"));
+          }
 
-                // TOTAL PRICE
-                Text(
-                    "${cartService.calculateTotalPrice(docs: docs).toString()}"),
+          // final cartItems = snapshot.data!;
 
-                MaterialButton(
-                  color: Colors.green,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OrderDetailsScreen(
-                            totalCartPrice:
-                                cartService.calculateTotalPrice(docs: docs),
-                          ),
-                        ));
-                  },
-                  child: Text("Order Now"),
-                )
-              ],
-            );
-          },
-        ));
+          return CartListview(snapshot: snapshot);
+        },
+      ),
+    );
   }
 }
