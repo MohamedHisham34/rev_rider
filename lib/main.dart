@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/firebase_options.dart';
+import 'package:rev_rider/screens/authentication/login_screen.dart';
 import 'package:rev_rider/screens/main_app/home_screen.dart';
 import 'package:rev_rider/screens/main_app/welcome_screen.dart';
 import 'package:rev_rider/services/auth_service.dart';
@@ -12,6 +13,12 @@ import 'package:rev_rider/services/auth_service.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 FirebaseAuth uAuth = FirebaseAuth.instance;
 AuthService authService = AuthService();
+
+void returnToPerviousScreen({required BuildContext context}) {
+  Navigator.pop(context);
+  Navigator.pop(context);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -43,6 +50,7 @@ class MyApp extends StatelessWidget {
       routes: {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         HomeScreen.id: (context) => HomeScreen(),
+        LoginScreen.id: (context) => LoginScreen(),
       },
     );
   }

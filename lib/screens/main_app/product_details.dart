@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/cart_model.dart';
 import 'package:rev_rider/models/product_model.dart';
+import 'package:rev_rider/screens/authentication/login_screen.dart';
 import 'package:rev_rider/services/product_service.dart';
 import 'package:rev_rider/widgets/quantity_selector.dart';
 import 'package:rev_rider/widgets/reusable_future_builder.dart';
@@ -47,24 +48,30 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                   // Quantity Selector Widget to Adjust Quantity
                   ProductQuantitySelector(),
+                  TextButton(
+                      onPressed: () {
+                        authService.signOut();
+                        print(authService.currentUser?.uid);
+                      },
+                      child: Text("Sign Out Test")),
                   MaterialButton(
+                    color: Colors.green,
                     onPressed: () async {
+                      authService.signedInChecker(context: context);
+
                       double price = double.parse(
                           "${snapshot.data[ProductModel.firebaseField_price]}");
                       int stock = int.parse(
                           "${snapshot.data[ProductModel.firebaseField_stock]}");
 
                       CartModel cartModel = CartModel.addProductTCart(
-                          quantity: _quantity,
-                          itemName:
-                              "${snapshot.data[CartModel.firebaseField_itemName]}",
-                          productID: "${widget.selectedItemId}",
-                          price: price,
-                          stock: stock);
+                        quantity: _quantity,
+                        productID: "${widget.selectedItemId}",
+                      );
 
                       await db
                           .collection("Users")
-                          .doc(authService.currentUser!.uid)
+                          .doc(authService.currentUser?.uid)
                           .collection('cart')
                           .doc("${widget.selectedItemId}")
                           .set(cartModel.cartInfo());

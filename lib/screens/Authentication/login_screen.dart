@@ -7,6 +7,7 @@ import 'package:rev_rider/models/user_model.dart';
 import 'package:rev_rider/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const id = "LoginScreen";
   const LoginScreen({super.key});
 
   @override
@@ -99,6 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       User? user = await authService.signIn(email, password);
                       if (user != null) {
                         print('Signed in as: ${user.email}');
+
+                        returnToPerviousScreen(context: context);
                       } else {
                         print('Sign-in failed.');
                       }

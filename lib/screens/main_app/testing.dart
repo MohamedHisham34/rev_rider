@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rev_rider/main.dart';
@@ -12,6 +13,7 @@ import 'package:rev_rider/services/product_service.dart';
 import 'package:rev_rider/widgets/category_horizontal_listview.dart';
 import 'package:rev_rider/widgets/product_gridview.dart';
 import 'package:rev_rider/widgets/reusable_future_builder.dart';
+import 'package:rev_rider/widgets/reusable_stream_builder.dart';
 
 class Testing extends StatefulWidget {
   const Testing({super.key});
@@ -21,6 +23,10 @@ class Testing extends StatefulWidget {
 }
 
 class _TestingState extends State<Testing> {
+  List<String> test = [];
+
+  Map allCartData = {};
+
   ProductService productServices = ProductService();
 
   String? selectedCategory;
@@ -29,34 +35,16 @@ class _TestingState extends State<Testing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text('Title'),
       ),
-      body: Column(
-        children: [
-          Text("No Change"),
-          Text('model.name'),
-          Expanded(
-            child: FutureBuilder(
-              future: db.collection("Test").get(),
-              builder: (context, snapshot) {
-                var docs = snapshot.data?.docs;
-                return ListView.builder(
-                  itemCount: snapshot.data?.docs.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Text(
-                            docs?[index][Test.FirebaseField_Name] ?? "NO Data"),
-                        Text(docs?[index][Test.FirebaseField_age]),
-                        Text(docs?[index][Test.FirebaseField_gender]),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          )
-        ],
+      body: Container(
+        child: TextButton(
+            onPressed: () {
+              allCartData.addAll({"Test": "test"});
+              allCartData.addAll({"Test": "Mohamed"});
+              print(allCartData);
+            },
+            child: Text("data")),
       ),
     );
   }
