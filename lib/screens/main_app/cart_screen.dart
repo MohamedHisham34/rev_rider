@@ -1,72 +1,86 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/models/cart_model.dart';
 import 'package:rev_rider/models/product_model.dart';
-import 'package:rev_rider/widgets/cart_listview.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rev_rider/services/cart_service.dart';
+import 'package:rev_rider/services/product_service.dart';
+import 'package:rev_rider/widgets/reusable_future_builder.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
-  Stream<List<Map<String, dynamic>>> cartItemsStream() {
-    final cartRef = db
-        .collection("Users")
-        .doc(authService.currentUser?.uid)
-        .collection('cart');
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
 
-    return cartRef.snapshots().switchMap((cartSnapshot) {
-      List<Stream<Map<String, dynamic>>> productStreams = [];
+class _CartScreenState extends State<CartScreen> {
+  CartService _cartService = CartService();
+  Stream<QuerySnapshot> cartItem = cartReference.snapshots();
+  Stream<QuerySnapshot> productItems = productReference.snapshots();
 
-      for (var cartDoc in cartSnapshot.docs) {
-        final productId = cartDoc.id;
-        final quantity = cartDoc['quantity'];
-
-        // For each product ID, listen to changes in product doc
-        final productStream = db
-            .collection('products')
-            .doc(productId)
-            .snapshots()
-            .map((productSnap) {
-          final productData = productSnap.data() ?? {};
-          productData['quantity'] = quantity;
-          return productData;
-        });
-
-        productStreams.add(productStream);
-      }
-
-      // If no items, return an empty stream
-      if (productStreams.isEmpty) {
-        return Stream.value([]);
-      }
-
-      // Combine all product streams into a single stream of list
-      return Rx.combineLatestList(productStreams);
-    });
-  }
+  List<String> cartProductsIds = [];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cart'),
-      ),
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: cartItemsStream(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return ReusableFutureBuilder(
+      future: _cartService.getData(cartProductsIds: cartProductsIds),
+      content: (snapshot) {
+        return StreamBuilder(
+          stream: cartItem,
+          builder: (context, cartSnapshot) {
+            var cartDocs = cartSnapshot.data?.docs ?? [];
+            return StreamBuilder(
+              stream: _cartService.cartItemsByProductsIds(
+                  productIds: cartProductsIds),
+              builder: (context, productSnapshot) {
+                var productsDocs = productSnapshot.data?.docs ?? [];
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: cartSnapshot.data?.docs.length,
+                        itemBuilder: (context, index) {
+                          String itemName = productSnapshot.data?.docs[index]
+                                  [ProductModel.firebaseField_itemName] ??
+                              "Couldn't Fetch Item Name";
 
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("Cart is empty"));
-          }
+                          int quantity = cartSnapshot.data?.docs[index]
+                                  [CartModel.firebaseField_quantity] ??
+                              1;
 
-          // final cartItems = snapshot.data!;
+                          double price = productSnapshot
+                                  .data
+                                  ?.docs[index]
+                                      [ProductModel.firebaseField_price]
+                                  ?.toDouble() ??
+                              0.0;
 
-          return CartListview(snapshot: snapshot);
-        },
-      ),
+                          double totalPrice = quantity * price;
+                          return Column(
+                            children: [
+                              Text(itemName),
+                              Text("$quantity"),
+                              Text("$totalPrice"),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    Text(
+                        "${_cartService.cal(productsDocs: productsDocs, cartDocs: cartDocs)}"),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

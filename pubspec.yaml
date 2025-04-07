@@ -43,6 +43,7 @@ dependencies:
   uuid: ^4.4.2
   provider: ^6.1.2
   rxdart: ^0.28.0
+ 
 
 dev_dependencies:
   flutter_test:
