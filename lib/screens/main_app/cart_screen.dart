@@ -26,7 +26,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return ReusableFutureBuilder(
-      future: _cartService.getData(cartProductsIds: cartProductsIds),
+      future: _cartService.getCartItemsIds(cartProductsIds: cartProductsIds),
       content: (snapshot) {
         return StreamBuilder(
           stream: cartItem,
@@ -73,7 +73,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                     Text(
-                        "${_cartService.cal(productsDocs: productsDocs, cartDocs: cartDocs)}"),
+                        "${_cartService.calculateTotalPrice(productsDocs: productsDocs, cartDocs: cartDocs)}"),
                   ],
                 );
               },

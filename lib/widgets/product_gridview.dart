@@ -18,6 +18,8 @@ class ProductGridview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, crossAxisSpacing: 20),
       itemCount: itemCount,
@@ -31,7 +33,7 @@ class ProductGridview extends StatelessWidget {
               Text(
                   "${snapshot.data.docs[index][ProductModel.firebaseField_itemName]}"),
               Text(
-                  "${snapshot.data.docs[index][ProductModel.firebaseField_description]}"),
+                  "${snapshot.data.docs[index][ProductModel.firebaseField_price]}"),
             ]),
           ),
         );

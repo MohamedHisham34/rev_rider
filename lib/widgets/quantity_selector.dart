@@ -24,11 +24,14 @@ class _QuantitySelectorState extends State<QuantitySelector> {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        Text("Quantity"),
         Text(
           "${widget.quantity}",
-          style: TextStyle(fontSize: 30, backgroundColor: Colors.red),
+          style: TextStyle(
+            fontSize: 30,
+          ),
         ),
         SizedBox(
           width: 20,

@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, unnecessary_brace_in_string_interps
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/cart_model.dart';
 import 'package:rev_rider/models/product_model.dart';
-import 'package:rev_rider/screens/authentication/login_screen.dart';
+
 import 'package:rev_rider/services/product_service.dart';
 import 'package:rev_rider/widgets/quantity_selector.dart';
 import 'package:rev_rider/widgets/reusable_future_builder.dart';
@@ -39,8 +37,21 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  Image.asset(
+                    "images/helmet.png",
+                  ),
+
+                  Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                  ),
                   Text(
                       "items Name: ${snapshot.data[ProductModel.firebaseField_itemName]} "
                       " description: ${snapshot.data[ProductModel.firebaseField_description]} "

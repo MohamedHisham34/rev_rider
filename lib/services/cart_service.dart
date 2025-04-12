@@ -21,18 +21,8 @@ class CartService {
         .snapshots();
   }
 
-  // double calculateTotalPrice({required List productDocs , required List cartDocs}) {
-  //   double totalCartPrice = 0.00;
-  //   for (var docs in cartDocs , var docs in productDocs) {
-  //     double totalPrice = (docs.data() as Map<String, dynamic>)['price'] ?? 0.0;
-  //     int quantity = (docs.data() as Map<String, dynamic>)['quantity'] ?? 1;
-  //     totalCartPrice += totalPrice * quantity;
-  //   }
-
-  //   return totalCartPrice;
-  // }
-
-  double cal({required List productsDocs, required List cartDocs}) {
+  double calculateTotalPrice(
+      {required List productsDocs, required List cartDocs}) {
     int len = cartDocs.length < productsDocs.length
         ? cartDocs.length
         : productsDocs.length;
@@ -49,7 +39,7 @@ class CartService {
     return totalCartPrice;
   }
 
-  getData({required List cartProductsIds}) async {
+  getCartItemsIds({required List cartProductsIds}) async {
     await db
         .collection("Users")
         .doc(authService.currentUser?.uid)

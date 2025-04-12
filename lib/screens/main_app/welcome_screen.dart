@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rev_rider/constants/colors.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/test.dart';
 import 'package:rev_rider/screens/admin_panel/admin_add_product.dart';
@@ -21,6 +24,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  bool isSelected = false;
   int currentIndex = 0;
   List<Widget> screens = [
     HomeScreen(),
@@ -30,16 +34,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: screens[currentIndex],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
+      body: screens[currentIndex],
+      bottomNavigationBar: CurvedNavigationBar(
+        buttonBackgroundColor: Colors.black,
+        backgroundColor: PrimaryOrangeColor,
+        color: Colors.white,
+        height: 60,
+        index: currentIndex,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.category_rounded), label: "Cart"),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Profile"),
+          Icon(
+            Icons.home,
+            size: 20,
+            color: currentIndex == 0 ? Colors.white : Colors.grey,
+          ),
+          Icon(
+            Icons.card_travel,
+            size: 30,
+            color: currentIndex == 1 ? Colors.white : Colors.grey,
+          ),
+          Icon(
+            Icons.person,
+            size: 20,
+            color: currentIndex == 2 ? Colors.white : Colors.grey,
+          ),
         ],
         onTap: (int newIndex) {
           setState(() {
