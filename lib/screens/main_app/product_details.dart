@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, unnecessary_brace_in_string_interps
 
 import 'package:flutter/material.dart';
+import 'package:rev_rider/constants/colors.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/cart_model.dart';
 import 'package:rev_rider/models/product_model.dart';
@@ -22,81 +23,102 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
 // productService
-  ProductService productService = ProductService();
+  ProductService _productService = ProductService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: ReusableFutureBuilder(
-          future: productService.getSingleProductById(
+        backgroundColor: PrimaryGreyColor,
+        body: ReusableFutureBuilder(
+          future: _productService.getSingleProductById(
               selectedItemId: widget.selectedItemId),
           content: (snapshot) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Product Details'),
-              ),
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            return SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image.asset(
-                    "images/helmet.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset("images/helmet.png"),
                   ),
-
                   Container(
-                    height: 100,
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Colors.white,
                       borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
+                        top: Radius.circular(40),
                       ),
                     ),
-                  ),
-                  Text(
-                      "items Name: ${snapshot.data[ProductModel.firebaseField_itemName]} "
-                      " description: ${snapshot.data[ProductModel.firebaseField_description]} "
-                      " Item Price: ${snapshot.data[ProductModel.firebaseField_price]}"),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            textAlign: TextAlign.start,
+                            "${snapshot.data[ProductModel.firebaseField_itemName]}",
+                            style: TextStyle(fontSize: 25),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              style: TextStyle(fontSize: 20),
+                              "${snapshot.data[ProductModel.firebaseField_price]}",
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                              "${snapshot.data[ProductModel.firebaseField_description]}"),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ProductQuantitySelector(),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: MaterialButton(
+                            minWidth: double.infinity,
+                            color: PrimaryOrangeColor,
+                            onPressed: () async {
+                              authService.signedInChecker(context: context);
 
-                  // Quantity Selector Widget to Adjust Quantity
-                  ProductQuantitySelector(),
-                  TextButton(
-                      onPressed: () {
-                        authService.signOut();
-                        print(authService.currentUser?.uid);
-                      },
-                      child: Text("Sign Out Test")),
-                  MaterialButton(
-                    color: Colors.green,
-                    onPressed: () async {
-                      authService.signedInChecker(context: context);
+                              CartModel cartModel = CartModel.addProductTCart(
+                                quantity: _quantity,
+                                productID: "${widget.selectedItemId}",
+                              );
 
-                      double price = double.parse(
-                          "${snapshot.data[ProductModel.firebaseField_price]}");
-                      int stock = int.parse(
-                          "${snapshot.data[ProductModel.firebaseField_stock]}");
+                              await db
+                                  .collection("Users")
+                                  .doc(authService.currentUser?.uid)
+                                  .collection('cart')
+                                  .doc("${widget.selectedItemId}")
+                                  .set(cartModel.cartInfo());
 
-                      CartModel cartModel = CartModel.addProductTCart(
-                        quantity: _quantity,
-                        productID: "${widget.selectedItemId}",
-                      );
-
-                      await db
-                          .collection("Users")
-                          .doc(authService.currentUser?.uid)
-                          .collection('cart')
-                          .doc("${widget.selectedItemId}")
-                          .set(cartModel.cartInfo());
-                    },
-                    child: Text("Add To Cart"),
+                              print("Product ADDED TO CART");
+                            },
+                            child: Text(
+                              "ADD TO CART",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Text("Delivery on 28 October"),
+                      ],
+                    ),
                   )
                 ],
               ),
             );
           },
-          //Future Builder For Product Details
-        ),
-      ),
-    );
+        ));
   }
 }
 

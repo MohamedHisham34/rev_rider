@@ -222,67 +222,70 @@ class Testing extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[350],
       body: SafeArea(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Image.asset("images/helmet.png"),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset("images/helmet.png"),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(40),
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    textAlign: TextAlign.start,
-                    "Ghost Helmet,Blue",
-                    style: TextStyle(fontSize: 25),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(10),
                     child: Text(
-                      style: TextStyle(fontSize: 20),
-                      "200 EGP",
+                      textAlign: TextAlign.start,
+                      "Ghost Helmet,Blue",
+                      style: TextStyle(fontSize: 25),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                      "blending the classic Bandit styling with modern features. This full-face helmet is DOT/ECE certified, featuring a lightweight shell made of proprietary composite materials."),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: QuantitySelector(
-                      onPlusTap: () {}, quantity: 0, onMinusTap: () {}),
-                ),
-                MaterialButton(
-                  minWidth: double.infinity,
-                  onPressed: () {},
-                  child: Text(
-                    "ADD TO CART",
-                    style: TextStyle(color: Colors.white),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        style: TextStyle(fontSize: 20),
+                        "200 EGP",
+                      ),
+                    ),
                   ),
-                  color: PrimaryOrangeColor,
-                ),
-              ],
-            ),
-          )
-        ],
-      )),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                        "blending the classic Bandit styling with modern features. This full-face helmet is DOT/ECE certified, featuring a lightweight shell made of proprietary composite materials."),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: QuantitySelector(
+                        onPlusTap: () {}, quantity: 0, onMinusTap: () {}),
+                  ),
+                  MaterialButton(
+                    color: PrimaryOrangeColor,
+                    onPressed: () {},
+                    child: Text(
+                      "ADD TO CART",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
