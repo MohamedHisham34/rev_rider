@@ -7,6 +7,7 @@ import 'package:rev_rider/widgets/admin_product_interface.dart';
 import 'package:rev_rider/widgets/reusable_stream_builder.dart';
 
 class AdminProductList extends StatefulWidget {
+  static const id = "AdminProductList";
   const AdminProductList({super.key});
 
   @override

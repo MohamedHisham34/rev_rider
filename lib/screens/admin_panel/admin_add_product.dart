@@ -4,6 +4,7 @@ import 'package:rev_rider/widgets/admin_add_product_interface.dart';
 import 'package:rev_rider/widgets/reusable_future_builder.dart';
 
 class AdminAddProduct extends StatefulWidget {
+  static const id = "AdminAddProduct";
   const AdminAddProduct({super.key});
 
   @override
