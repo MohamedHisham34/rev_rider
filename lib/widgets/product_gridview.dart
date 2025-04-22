@@ -24,16 +24,31 @@ class ProductGridview extends StatelessWidget {
           crossAxisCount: 2, crossAxisSpacing: 20),
       itemCount: itemCount,
       itemBuilder: (context, index) {
+        String imageUrl = snapshot.data.docs[index]
+                [ProductModel.firebaseField_imageUrl] ??
+            "https://i.postimg.cc/nctPmPQm/logo.png";
+
+        String itemName = snapshot.data.docs[index]
+                .data()
+                .containsKey(ProductModel.firebaseField_itemName)
+            ? snapshot.data.docs[index][ProductModel.firebaseField_itemName] ??
+                "Item Got No Name"
+            : "Database Error";
+
+        double price =
+            snapshot.data.docs[index][ProductModel.firebaseField_price] ?? 0;
         return GestureDetector(
           onTap: () {
             onProductTap(index);
           },
           child: Card(
             child: Column(children: [
-              Text(
-                  "${snapshot.data.docs[index][ProductModel.firebaseField_itemName]}"),
-              Text(
-                  "${snapshot.data.docs[index][ProductModel.firebaseField_price]}"),
+              Image(
+                height: 100,
+                image: NetworkImage("$imageUrl"),
+              ),
+              Text("$itemName"),
+              Text("$price"),
             ]),
           ),
         );

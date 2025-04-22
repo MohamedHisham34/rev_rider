@@ -7,12 +7,15 @@ class CategoryHorizontalListview extends StatelessWidget {
   CategoryHorizontalListview({
     super.key,
     required this.onTap,
-    required this.snapshot,
     required this.selectedCategoryIndex,
+    required this.itemCount,
+    required this.listedCategoryName,
   });
   /////////
   final Function onTap;
-  AsyncSnapshot snapshot;
+  final int itemCount;
+  final List listedCategoryName;
+
   int selectedCategoryIndex;
 
   @override
@@ -20,7 +23,7 @@ class CategoryHorizontalListview extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
-      itemCount: snapshot.data?.docs.length,
+      itemCount: itemCount,
       itemBuilder: (context, index) {
         return Padding(
           padding: EdgeInsets.all(8),
@@ -36,7 +39,9 @@ class CategoryHorizontalListview extends StatelessWidget {
                       : Colors.grey[350]),
               child: Center(
                 child: Text(
-                  snapshot.data.docs[index]['name'],
+                  listedCategoryName[index],
+                  // snapshot.data.docs[index]['name']
+
                   style: TextStyle(
                     color: selectedCategoryIndex == index
                         ? Colors.white
