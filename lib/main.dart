@@ -5,7 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rev_rider/firebase_options.dart';
+import 'package:rev_rider/screens/admin_panel/admin_add_product.dart';
+import 'package:rev_rider/screens/admin_panel/admin_dashboard.dart';
+import 'package:rev_rider/screens/admin_panel/admin_product_list.dart';
 import 'package:rev_rider/screens/authentication/login_screen.dart';
+import 'package:rev_rider/screens/authentication/registration_screen.dart';
 import 'package:rev_rider/screens/main_app/home_screen.dart';
 import 'package:rev_rider/screens/main_app/welcome_screen.dart';
 import 'package:rev_rider/services/auth_service.dart';
@@ -48,9 +52,18 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: WelcomeScreen.id,
       routes: {
+        //Bottom Navigation
         WelcomeScreen.id: (context) => WelcomeScreen(),
+        //Main Application
         HomeScreen.id: (context) => HomeScreen(),
+        // Login And Register
         LoginScreen.id: (context) => LoginScreen(),
+        RegistrationScreen.id: (context) => RegistrationScreen(),
+
+        // Admin
+        AdminDashboard.id: (context) => AdminDashboard(),
+        AdminProductList.id: (context) => AdminProductList(),
+        AdminAddProduct.id: (context) => AdminAddProduct(),
       },
     );
   }
