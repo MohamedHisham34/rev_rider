@@ -42,4 +42,22 @@ class ProductService {
     var selectedProductId = snapshot.data?.docs[index]['productID'];
     productReference.doc(selectedProductId).delete();
   }
+
+  bool productPriceChecker({
+    required double price,
+  }) {
+    bool productChecker;
+    bool priceChecker = price == null || price <= 0;
+
+    if (priceChecker == true) {
+      productChecker = true;
+    } else {
+      productChecker = false;
+    }
+    return priceChecker;
+  }
+
+  productsCheck({required String productId}) {
+    productReference.doc(productId).delete();
+  }
 }

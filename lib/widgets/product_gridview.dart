@@ -2,7 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/product_model.dart';
+import 'package:rev_rider/services/firestore_service.dart';
 
 class ProductGridview extends StatelessWidget {
   const ProductGridview(
@@ -28,15 +30,22 @@ class ProductGridview extends StatelessWidget {
                 [ProductModel.firebaseField_imageUrl] ??
             "https://i.postimg.cc/nctPmPQm/logo.png";
 
-        String itemName = snapshot.data.docs[index]
-                .data()
-                .containsKey(ProductModel.firebaseField_itemName)
-            ? snapshot.data.docs[index][ProductModel.firebaseField_itemName] ??
-                "Item Got No Name"
-            : "Database Error";
+        // String itemName = snapshot.data.docs[index]
+        //         .data()
+        //         .containsKey(ProductModel.firebaseField_itemName)
+        //     ? snapshot.data.docs[index][ProductModel.firebaseField_itemName] ??
+        //         "Item Got No Name"
+        //     : "Database Error";
 
-        double price =
-            snapshot.data.docs[index][ProductModel.firebaseField_price] ?? 0;
+        String itemName = firestoreService.testingString(
+            snapshot: snapshot,
+            firebaseField: ProductModel.firebaseField_itemName,
+            index: index);
+
+        double price = firestoreService.testingDoubles(
+            snapshot: snapshot,
+            firebaseField: ProductModel.firebaseField_price,
+            index: index);
         return GestureDetector(
           onTap: () {
             onProductTap(index);
