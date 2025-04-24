@@ -13,9 +13,12 @@ import 'package:rev_rider/screens/authentication/registration_screen.dart';
 import 'package:rev_rider/screens/main_app/home_screen.dart';
 import 'package:rev_rider/screens/main_app/welcome_screen.dart';
 import 'package:rev_rider/services/auth_service.dart';
+import 'package:rev_rider/services/firestore_service.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 FirebaseAuth uAuth = FirebaseAuth.instance;
+FirestoreService firestoreService = FirestoreService();
+
 AuthService authService = AuthService();
 
 void returnToPerviousScreen({required BuildContext context}) {
