@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 enum OrderState {
+  pending,
   delivering,
   shipping,
   canceled,
@@ -15,6 +16,8 @@ class OrderModel {
   static const String firebaseField_orderAddress = 'orderAddress';
   static const String firebaseField_orderPlacedBy = 'orderPlacedBy';
   static const String firebaseField_orderState = 'orderState';
+  static const String firebaseField_productIds = 'productIds';
+  static const String firebaseField_paymentMethod = 'paymentMethod';
 
   final String? orderID;
   final double? orderTotalPrice;
@@ -22,6 +25,7 @@ class OrderModel {
   final String? orderAddress;
   final OrderState orderState;
   final String? orderPlacedBy;
+  final String paymentMethod;
 
   OrderModel(
       {required this.orderID,
@@ -29,6 +33,7 @@ class OrderModel {
       required this.numberOfItems,
       required this.orderAddress,
       required this.orderState,
+      required this.paymentMethod,
       required this.orderPlacedBy});
 
   Map<String, dynamic> orderInfo() {
@@ -39,6 +44,7 @@ class OrderModel {
       firebaseField_orderAddress: orderAddress,
       firebaseField_orderState: orderState.name,
       firebaseField_orderPlacedBy: orderPlacedBy,
+      firebaseField_paymentMethod: paymentMethod,
     };
   }
 }
