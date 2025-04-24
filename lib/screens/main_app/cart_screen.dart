@@ -81,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
 
 // final matchingProducts = productsDocs.where((doc) => doc.id == "b2");
 
-// 👉 Output will be an Iterable that contains just this product:
+//  Output will be an Iterable that contains just this product:
 // [{ id: "b2", name: "Gloves" }]
 
                             if (matchingProducts.isEmpty) {

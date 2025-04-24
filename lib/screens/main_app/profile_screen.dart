@@ -8,10 +8,14 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     authService.signedInChecker(context: context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile Page'),
-      ),
-      body: Container(),
-    );
+        appBar: AppBar(
+          title: const Text('Profile Page'),
+        ),
+        body: Scaffold(
+          appBar: AppBar(
+            title: const Text('Profile Screen'),
+          ),
+          body: Container(),
+        ));
   }
 }

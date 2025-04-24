@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/screens/admin_panel/admin_dashboard.dart';
+import 'package:rev_rider/screens/authentication/login_screen.dart';
 import 'package:rev_rider/screens/main_app/orders_list.dart';
 import 'package:rev_rider/screens/main_app/testing.dart';
 
@@ -55,7 +56,14 @@ Widget appDrawer({required BuildContext context}) {
         ListTile(
           leading: Icon(Icons.settings),
           title: Text('Setting'),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Testing(),
+              ),
+            );
+          },
         ),
         ListTile(
           leading: Icon(Icons.admin_panel_settings),
@@ -65,15 +73,11 @@ Widget appDrawer({required BuildContext context}) {
           },
         ),
         ListTile(
-          leading: Icon(Icons.portable_wifi_off),
-          title: Text('Login Test'),
+          leading: Icon(Icons.login),
+          title: Text('Sign Out'),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Testing(),
-              ),
-            );
+            authService.signOut();
+            Navigator.pushNamed(context, LoginScreen.id);
           },
         ),
       ],
