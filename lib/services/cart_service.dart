@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rev_rider/main.dart';
+import 'package:rev_rider/models/cart_model.dart';
 
 CollectionReference cartReference = db
     .collection('Users')
@@ -51,6 +52,24 @@ class CartService {
         for (var docSnapshot in querySnapshot.docs) {
           cartProductsIds.add(docSnapshot.id);
           print(cartProductsIds);
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
+
+  getCartItemsQuantity({required List cartProductsQuantity}) async {
+    await db
+        .collection("Users")
+        .doc(authService.currentUser?.uid)
+        .collection('cart')
+        .get()
+        .then(
+      (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          cartProductsQuantity
+              .add(docSnapshot[CartModel.firebaseField_quantity]);
+          print(cartProductsQuantity);
         }
       },
       onError: (e) => print("Error completing: $e"),

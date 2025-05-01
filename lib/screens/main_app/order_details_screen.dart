@@ -5,6 +5,7 @@ import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/cart_model.dart';
 import 'package:rev_rider/models/order_model.dart';
 import 'package:rev_rider/models/product_model.dart';
+import 'package:rev_rider/services/cart_service.dart';
 import 'package:uuid/uuid.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
@@ -24,9 +25,44 @@ class OrderDetailsScreen extends StatefulWidget {
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  CartService _cartService = CartService();
   final TextEditingController _addressController = TextEditingController();
   String _selectedPaymentMethod = "Cash on Delivery";
   final uuid = Uuid();
+
+  List<String> _cartProductIds = [];
+  List<int> cartProductsQuantity = [];
+  // Map<String, int> cartProductsIdsquantity = {};
+
+  getCartIds() async {
+    await _cartService.getCartItemsIds(cartProductsIds: _cartProductIds);
+    print(_cartProductIds);
+  }
+
+  getCartQuantity() async {
+    await _cartService.getCartItemsQuantity(
+        cartProductsQuantity: cartProductsQuantity);
+    print(cartProductsQuantity);
+  }
+
+  Map<String, int> assignCartProductsInfoMap() {
+    Map<String, int> cartProductsIdsquantity =
+        Map.fromIterables(_cartProductIds, cartProductsQuantity);
+    print(cartProductsIdsquantity);
+    return cartProductsIdsquantity;
+  }
+
+  getAllData() async {
+    await getCartIds();
+    await getCartQuantity();
+    await assignCartProductsInfoMap();
+  }
+
+  void initState() {
+    getAllData();
+
+    super.initState();
+  }
 
   void _placeOrder() async {
     if (_addressController.text.isEmpty) {
@@ -41,6 +77,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     String orderID = uuid.v1();
 
     OrderModel orderModel = OrderModel(
+      productsIds: assignCartProductsInfoMap(),
       orderID: orderID,
       orderTotalPrice: widget.totalCartPrice,
       numberOfItems: widget.cartDocs.length,
@@ -81,6 +118,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   final name = product[ProductModel.firebaseField_itemName];
                   final quantity =
                       cartItem[CartModel.firebaseField_quantity] ?? 1;
+
                   final price = (product[ProductModel.firebaseField_price] ?? 0)
                       .toDouble();
                   final imageUrl = product[ProductModel.firebaseField_imageUrl];
