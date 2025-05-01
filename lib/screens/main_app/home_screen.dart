@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    authService.signedInChecker(context: context);
     return Scaffold(
       drawer: appDrawer(context: context),
       backgroundColor: Colors.grey[350],

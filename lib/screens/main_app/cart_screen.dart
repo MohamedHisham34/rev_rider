@@ -20,7 +20,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   final CartService _cartService = CartService();
   final Stream<QuerySnapshot> cartItem = cartReference.snapshots();
-  List<String> cartProductIds = [];
+  List<String> _cartProductIds = [];
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _CartScreenState extends State<CartScreen> {
 
       // Builder To Get All Products Id in The Cart Collection
       body: ReusableFutureBuilder(
-        future: _cartService.getCartItemsIds(cartProductsIds: cartProductIds),
+        future: _cartService.getCartItemsIds(cartProductsIds: _cartProductIds),
         content: (_) {
 // StreamBuilder to Get (Quantity,Product Ids)
 
@@ -44,7 +44,7 @@ class _CartScreenState extends State<CartScreen> {
 // Get All Products Data From Firebase With User Cart Products Ids
               return StreamBuilder(
                 stream: _cartService.cartItemsByProductsIds(
-                    productIds: cartProductIds),
+                    productIds: _cartProductIds),
                 builder: (context, productSnapshot) {
                   var productsDocs = productSnapshot.data?.docs ?? [];
 
