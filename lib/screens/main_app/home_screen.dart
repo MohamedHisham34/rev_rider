@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, prefer_final_fields
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rev_rider/cubit/category_cubit.dart';
+import 'package:rev_rider/cubit/category_state.dart';
 import 'package:rev_rider/main.dart';
 import 'package:rev_rider/models/product_model.dart';
 import 'package:rev_rider/screens/main_app/product_details.dart';
@@ -128,36 +131,41 @@ class _HomeScreenState extends State<HomeScreen> {
                       listedCategoryName: listedCategoryNames ?? [],
                       selectedCategoryIndex: selectedCategoryIndex,
                       onTap: (index) {
-                        selectedCategoryIndex = index;
-                        selectedCategory = listedCategoryIds![index];
-                        // selectedCategory = docs[Index].id;
+                        context
+                            .read<CategoryCubit>()
+                            .categoryChanged(selectedCategoryIndex: index);
 
-                        setState(() {});
+                        selectedCategory = listedCategoryIds![index];
                       },
                     ),
                   ),
                 ),
 
                 // PRODUCTS
-                ReusableFutureBuilder(
-                  future: _productService.getProductsByCategory(
-                      selectedCategory: selectedCategory),
-                  content: (snapshot) {
-                    var docs = snapshot.data.docs;
+                BlocBuilder<CategoryCubit, CategoryState>(
+                  builder: (context, state) {
+                    print("Rebuild");
+                    return ReusableFutureBuilder(
+                      future: _productService.getProductsByCategory(
+                          selectedCategory: selectedCategory),
+                      content: (snapshot) {
+                        var docs = snapshot.data.docs;
 
-                    return ProductGridview(
-                      itemCount: docs.length,
-                      onProductTap: (index) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetails(
-                                selectedItemId: docs?[index]
-                                    [ProductModel.firebaseField_productID]),
-                          ),
+                        return ProductGridview(
+                          itemCount: docs.length,
+                          onProductTap: (index) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetails(
+                                    selectedItemId: docs?[index]
+                                        [ProductModel.firebaseField_productID]),
+                              ),
+                            );
+                          },
+                          snapshot: snapshot,
                         );
                       },
-                      snapshot: snapshot,
                     );
                   },
                 )
